@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--MyBatis 真正的力量是在映射语句中。这里是奇迹发生的地方。  对于所有的力量,SQL 映射的 XML 文件是相当的简单。
+    当然如果你将它们和对等功能的 JDBC 代码来比较,你会发现映射文件节省了大约 95%的代码量。
+    MyBatis 的构建就是聚焦于 SQL 的,使其远离于普通的方式。
+-->
+<!--namespace为全限定名，使用该映射文件中配置的已映射的sql语句时，最好加上全限定名，不然可能会造成语句模糊。-->
+<mapper namespace="com.nowcoder.community.dao.UserMapper">
+    <sql id="insertFields">
+        username,password,salt,email,type,status,activation_code,header_url,create_time
+    </sql>
+    <sql id="selectFields">
+        id,username,password,salt,email,type,status,activation_code,header_url,create_time
+    </sql>
+
+    <select id="selectById" resultType="User">
+        select <include refid="selectFields"></include>
+        from user where id=#{id}
+    </select>
+
+    <select id="selectByName" resultType="User">
+        select <include refid="selectFields"></include>
+        from user where username=#{username}
+    </select>
+    <select id="selectByEmail" resultType="User">
+        select <include refid="selectFields"></include>
+        from user where email=#{email}
+    </select>
+
+    <insert id="insertUser" parameterType="User" keyProperty="id">
+        insert into user (<include refid="insertFields"></include>)
+        values(#{username}, #{password}, #{salt}, #{email}, #{type}, #{status}, #{activationCode}, #{headerUrl}, #{createTime})
+
+    </insert>
+    <update id="updateStatus" >
+        update user set status=#{status} where id=#{id}
+    </update>
+
+    <update id="updateHeader">
+        update user set header_url = #{headerUrl} where id = #{id}
+    </update>
+
+    <update id="updatePassword">
+        update user set password = #{password} where id = #{id}
+    </update>
+
+
+
+</mapper>
